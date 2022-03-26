@@ -1,0 +1,12 @@
+﻿{
+	"namespace": "MightyWolf_",
+	"name": "ItemScorePlus",
+	"version_number": "1.0.0",
+	"website_url": "https://github.com/MightyW0lf/ItemScorePlus",
+	"description": "QoL features built on BetterUI's item score feature",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1903",
+		"tristanmcpherson-R2API-4.2.1",
+		"XoXFaby-BetterUI-2.5.4"
+	]
+}
