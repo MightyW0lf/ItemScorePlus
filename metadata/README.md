@@ -11,6 +11,9 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 
 ## Recent release history
 
+#### [1.0.1](https://github.com/MightyW0lf/ItemScorePlus/releases/tag/v1.0.0)
+
+* Mod is now client only.
 ### [1.0.0](https://github.com/MightyW0lf/ItemScorePlus/releases/tag/v1.0.0)
 
 * Initial release.

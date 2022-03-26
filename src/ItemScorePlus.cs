@@ -13,6 +13,8 @@ namespace ItemScorePlus {
 
     [R2APISubmoduleDependency(nameof(LanguageAPI))]
 
+    [NetworkCompatibility(CompatibilityLevel.NoNeedForSync, VersionStrictness.DifferentModVersionsAreOk)]
+
     public class ItemScorePlus : BaseUnityPlugin {
 
         // General metadata.
