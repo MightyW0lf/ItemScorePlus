@@ -16,4 +16,10 @@
 		<PackageReference Include="BetterUI" Version="2.5.4" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Reference Include="MMHOOK_Assembly-CSharp">
+	    <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
 </Project>

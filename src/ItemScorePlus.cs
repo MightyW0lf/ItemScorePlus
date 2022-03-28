@@ -1,7 +1,5 @@
 using BepInEx;
-using R2API;
 using R2API.Utils;
-using RoR2;
 using static ItemScorePlus.Configuration;
 
 namespace ItemScorePlus {
@@ -10,8 +8,6 @@ namespace ItemScorePlus {
     [BepInDependency("com.xoxfaby.BetterUI")]
 
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-
-    [R2APISubmoduleDependency(nameof(LanguageAPI))]
 
     [NetworkCompatibility(CompatibilityLevel.NoNeedForSync, VersionStrictness.DifferentModVersionsAreOk)]
 
@@ -27,15 +23,9 @@ namespace ItemScorePlus {
         /// Run at the very start when the game is initialized.
         /// </summary>
         public void Awake() {
-            Log.Init(Logger);
-
-            // Configuration bindings.
-            BindAll(Config);
-
-            // Append item scores when item catalog is ready.
-            if (Appearance.Value != AppearanceEnum.Hidden) {
-                ItemCatalog.availability.CallWhenAvailable(ItemDescription.AppendItemScore);
-            }
+            Log.Init(Logger); // Logging module.
+            BindAll(Config); // Configuration bindings.
+            ItemDescription.Init(); // Item description module.
         }
     }
 }

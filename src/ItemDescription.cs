@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System;
 using System.Linq;
-using R2API;
 using static ItemScorePlus.Configuration;
 
 namespace ItemScorePlus {
@@ -17,31 +16,30 @@ namespace ItemScorePlus {
         private static Dictionary<ItemTier, List<int>> ScoresPerTier;
 
         /// <summary>
-        /// Appends BetterUI's item score to the descriptions of all items.
+        /// Initialize the item description module. Should be called once on game initialization.
         /// </summary>
-        internal static void AppendItemScore() {
+        internal static void Init() {
 
-            if (Appearance.Value == AppearanceEnum.Detailed) {
-                ScoresPerTier = GetScoresPerTier(); // Needed only for detailed item score description.
+            if (Appearance.Value == AppearanceEnum.Detailed) { // Needed only for detailed item score description.
+                ItemCatalog.availability.CallWhenAvailable(() => ScoresPerTier = GetScoresPerTier());
             }
 
-            Log.LogDebug($"Appending item score info to item descriptions (appearance={Appearance.Value}).");
-            foreach (ItemDef item in ItemCatalog.allItemDefs) {
-                if (item.tier != ItemTier.NoTier) { // Ignore notier items as they cause issues and are not needed.
-                    int itemScore = ItemCounters.GetItemScore(item);
-                    string toAppend = Appearance.Value switch {
-                        AppearanceEnum.Compact => $"<style=cStack> +{itemScore} item score.</style>",
-                        AppearanceEnum.Detailed => GetDetailedItemScoreAppend(itemScore, item.tier),
-                        _ => $"\n\nItem score: <style=cIsUtility>{itemScore}</style>" // AppearanceEnum.Spacious or otherwise
-                    };
+            // Hook that ensures the item score info is appended to the item's on hover description.
+            On.RoR2.UI.ItemIcon.SetItemIndex += (orig, self, index, count) => {
+                orig(self, index, count);
+                self.tooltipProvider.overrideBodyText += GetItemScoreInfo(ItemCatalog.GetItemDef(index));
+            };
+        }
 
-                    // Append via LanguageAPI to make it visible in logbook (and anywhere else in general) as well.
-                    LanguageAPI.Add(item.descriptionToken, $"{Language.GetString(item.descriptionToken)}{toAppend}");
-
-                    Log.LogDebug($"Appended item score {itemScore} to item {item.name}.");
-                }
-            }
-            Log.LogInfo("BetterUI's item score appended to all item descriptions.");
+        /// <returns>A string with information about the given item's item score with formatting based 
+        /// on <see cref="Appearance"/>Appearance.</returns>
+        private static string GetItemScoreInfo(ItemDef item) {
+            int itemScore = ItemCounters.GetItemScore(item);
+            return Appearance.Value switch {
+                AppearanceEnum.Compact => $"<style=cStack> +{itemScore} item score.</style>",
+                AppearanceEnum.Detailed => GetDetailedItemScoreAppend(itemScore, item.tier),
+                _ => $"\n\nItem score: <style=cIsUtility>{itemScore}</style>" // AppearanceEnum.Spacious or otherwise
+            };
         }
 
         /// <summary>
