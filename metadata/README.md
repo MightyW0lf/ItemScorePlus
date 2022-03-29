@@ -5,10 +5,15 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 ## Features
 
 * Added item score to the item descriptions.
+
   ![Hover preview](https://i.imgur.com/w97NO38.png)
   * Configurable formatting presets with option to show more detailed info.
 
 ## Recent release history
+
+### [1.0.3](https://github.com/MightyW0lf/ItemScorePlus/releases/tag/v1.0.1)
+
+* README and Thunderstore tag fixes.
 
 ### [1.0.2](https://github.com/MightyW0lf/ItemScorePlus/releases/tag/v1.0.2)
 
@@ -19,9 +24,6 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 ### [1.0.1](https://github.com/MightyW0lf/ItemScorePlus/releases/tag/v1.0.1)
 
 * Mod is now client only.
-### [1.0.0](https://github.com/MightyW0lf/ItemScorePlus/releases/tag/v1.0.0)
-
-* Initial release.
 
 ## Links
 
