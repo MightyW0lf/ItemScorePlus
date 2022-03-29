@@ -13,7 +13,7 @@ namespace ItemScorePlus {
         /// <summary>
         /// Dictionary with list of item scores of all items in each tier, sorted in ascending order.
         /// </summary>
-        private static Dictionary<ItemTier, List<int>> ScoresPerTier;
+        private static Dictionary<ItemTier, List<float>> ScoresPerTier;
 
         /// <summary>
         /// Initialize the item description module. Should be called once on game initialization.
@@ -34,11 +34,11 @@ namespace ItemScorePlus {
         /// <returns>A string with information about the given item's item score with formatting based 
         /// on <see cref="Appearance"/>Appearance.</returns>
         private static string GetItemScoreInfo(ItemDef item) {
-            int itemScore = ItemCounters.GetItemScore(item);
+            float itemScore = ItemCounters.GetItemScore(item);
             return Appearance.Value switch {
-                AppearanceEnum.Compact => $"<style=cStack> +{itemScore} item score.</style>",
+                AppearanceEnum.Compact => $"<style=cStack> +{Math.Round(itemScore, 2)} item score.</style>",
                 AppearanceEnum.Detailed => GetDetailedItemScoreAppend(itemScore, item.tier),
-                _ => $"\n\nItem score: <style=cIsUtility>{itemScore}</style>" // AppearanceEnum.Spacious or otherwise
+                _ => $"\n\nItem score: <style=cIsUtility>{Math.Round(itemScore, 2)}</style>" // AppearanceEnum.Spacious or otherwise
             };
         }
 
@@ -48,13 +48,13 @@ namespace ItemScorePlus {
         /// <param name="itemScore"></param> Item's score.
         /// <param name="itemTier"></param> Item's tier.
         /// <returns>String ready to be appended to the item's description.</returns>
-        private static string GetDetailedItemScoreAppend(int itemScore, ItemTier itemTier) {
+        private static string GetDetailedItemScoreAppend(float itemScore, ItemTier itemTier) {
             StringBuilder sb = new();
             sb.Append("\n\nItem score: <style=cIsUtility>");
-            sb.Append(itemScore);
+            sb.Append(Math.Round(itemScore, 2));
             sb.Append("</style>");
 
-            if (ScoresPerTier.TryGetValue(itemTier, out List<int> scores) && scores.Sum() != 0) {
+            if (ScoresPerTier.TryGetValue(itemTier, out List<float> scores) && scores.Sum() != 0) {
 
                 int relative = (int) Math.Round(itemScore / scores.Average() * 100);
                 sb.Append("\n  > ");
@@ -88,19 +88,19 @@ namespace ItemScorePlus {
         }
 
         /// <returns>Dictionary with item score stats for each item tier.</returns>
-        private static Dictionary<ItemTier, List<int>> GetScoresPerTier() {
-            Dictionary<ItemTier, List<int>> scores = new();
+        private static Dictionary<ItemTier, List<float>> GetScoresPerTier() {
+            Dictionary<ItemTier, List<float>> scores = new();
             foreach (ItemDef item in ItemCatalog.allItemDefs) {
                 if (item.tier != ItemTier.NoTier) {
-                    if (scores.TryGetValue(item.tier, out List<int> tierScores)) {
+                    if (scores.TryGetValue(item.tier, out List<float> tierScores)) {
                         tierScores.Add(ItemCounters.GetItemScore(item));
                     } else {
-                        scores[item.tier] = new List<int> { ItemCounters.GetItemScore(item) };
+                        scores[item.tier] = new List<float> { ItemCounters.GetItemScore(item) };
                     }
                 }
             }
 
-            foreach (List<int> tierScores in scores.Values) {
+            foreach (List<float> tierScores in scores.Values) {
                 tierScores.Sort();
             }
 
