@@ -5,7 +5,6 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 ## Features
 
 * Added item score to the item descriptions.
-  ![Logbook preview](https://i.imgur.com/RoKjJlU.png)
   ![Hover preview](https://i.imgur.com/w97NO38.png)
   * Configurable formatting presets with option to show more detailed info.
 
@@ -15,6 +14,7 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 
 * Fixed: [Item descriptions with item score get overriden by other mods](https://github.com/MightyW0lf/ItemScorePlus/issues/1)
 * Compatibility fixes for changes to the item score API in [BetterUI](https://thunderstore.io/package/XoXFaby/BetterUI/) [v2.5.5](https://github.com/xoxfaby/BetterUI/releases/tag/v2.5.5).
+* Support for item score in descriptions in logbook has been removed (for now at least).
 
 ### [1.0.1](https://github.com/MightyW0lf/ItemScorePlus/releases/tag/v1.0.1)
 

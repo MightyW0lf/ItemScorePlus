@@ -5,7 +5,6 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 ## Features
 
 * Added item score to the item descriptions.
-  ![Logbook preview](https://i.imgur.com/RoKjJlU.png)
   ![Hover preview](https://i.imgur.com/w97NO38.png)
   * Configurable formatting presets with option to show more detailed info.
 
