@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of what the bug is. Screenshots or replays can help.
 
 **To Reproduce**
 Steps to reproduce the behavior:
@@ -20,8 +20,5 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Additional context**
-Add any other context about the problem here.
+**Log output**
+You can find the log output file under `Risk of Rain 2/BepInEx/LogOutput.log`. It can help with troubleshooting, but if you don't have it, at least write down which version of the mod you used and what other mods you have installed.
