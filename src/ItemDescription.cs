@@ -21,6 +21,7 @@ namespace ItemScorePlus {
         internal static void Init() {
 
             if (Appearance.Value == AppearanceEnum.Detailed) { // Needed only for detailed item score description.
+                Log.LogDebug("Item description formatting is set to detailed, gathering stats to display...");
                 ItemCatalog.availability.CallWhenAvailable(() => ScoresPerTier = GetScoresPerTier());
             }
 
