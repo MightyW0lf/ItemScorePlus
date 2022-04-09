@@ -32,13 +32,7 @@ namespace ItemScorePlus {
 
             ItemCatalog.availability.CallWhenAvailable(() => BuildItemDictionaries());
 
-            // Hook that ensures the item score info is appended to the item's on hover description.
-            On.RoR2.UI.ItemIcon.SetItemIndex += (orig, self, index, count) => {
-                orig(self, index, count);
-                self.tooltipProvider.overrideBodyText += GetItemScoreInfo(ItemCatalog.GetItemDef(index));
-            };
-
-            // Harmony patch.
+            // Harmony patch that ensures the item score info is appended to the item's on hover description.
             new PatchClassProcessor(new Harmony(ItemScorePlus.PluginGUID), typeof(ItemDescription)).Patch();
 
             Log.LogInfo($"ItemDescription module initialized.");
@@ -51,14 +45,12 @@ namespace ItemScorePlus {
             ItemTokens = new();
 
             foreach (ItemDef item in ItemCatalog.allItemDefs) {
-                if (item.tier != ItemTier.NoTier) { // Including noTier items is not necessary and causes issues.
-                    if (ScoresPerTier.TryGetValue(item.tier, out List<float> tierScores)) {
-                        tierScores.Add(ItemCounters.GetItemScore(item));
-                    } else {
-                        ScoresPerTier[item.tier] = new List<float> { ItemCounters.GetItemScore(item) };
-                    }
-                    ItemTokens.Add(item.nameToken, item.itemIndex);
+                if (ScoresPerTier.TryGetValue(item.tier, out List<float> tierScores)) {
+                    tierScores.Add(ItemCounters.GetItemScore(item));
+                } else {
+                    ScoresPerTier[item.tier] = new List<float> { ItemCounters.GetItemScore(item) };
                 }
+                ItemTokens[item.nameToken] = item.itemIndex;
             }
 
             foreach (List<float> tierScores in ScoresPerTier.Values) {
@@ -89,35 +81,39 @@ namespace ItemScorePlus {
             sb.Append(Math.Round(itemScore, 2));
             sb.Append("</style>");
 
-            if (ScoresPerTier.TryGetValue(itemTier, out List<float> scores) && scores.Sum() != 0) {
+            if (ScoresPerTier.TryGetValue(itemTier, out List<float> scores)) {
+                if (scores.Sum() != 0) {
 
-                int relative = (int)Math.Round(itemScore / scores.Average() * 100);
-                sb.Append("\n  > ");
-                sb.Append(relative switch { // Coloring based on how "good" the item score is.
-                    < 75 => "<color=#FF7F7F>",
-                    > 125 => "<style=cIsHealing>",
-                    _ => "<style=cIsDamage>"
-                });
-                sb.Append(relative);
-                sb.Append("%</style></color> of this item's tier average");
+                    int relative = (int)Math.Round(itemScore / scores.Average() * 100);
+                    sb.Append("\n  > ");
+                    sb.Append(relative switch { // Coloring based on how "good" the item score is.
+                        < 75 => "<color=#FF7F7F>",
+                        > 125 => "<style=cIsHealing>",
+                        _ => "<style=cIsDamage>"
+                    });
+                    sb.Append(relative);
+                    sb.Append("%</style></color> of this item's tier average");
 
-                // Lower is % of items with lower item score, higher is % of items with lower OR EQUAL item score.
-                int perfLower = (int)Math.Round((double)scores.FindIndex(score => score == itemScore) / scores.Count() * 100);
-                int perfHigher = (int)Math.Round((double)(scores.FindLastIndex(score => score == itemScore) + 1) / scores.Count() * 100);
-                sb.Append("\n  > Higher than ");
-                sb.Append(((perfLower + perfHigher) / 2) switch { // Coloring based on an average of those two values.
-                    < 40 => "<color=#FF7F7F>",
-                    > 60 => "<style=cIsHealing>",
-                    _ => "<style=cIsDamage>"
-                });
-                if (perfLower != perfHigher) {
-                    sb.Append(perfLower);
-                    sb.Append("-");
-                    sb.Append(perfHigher);
+                    // Lower is % of items with lower item score, higher is % of items with lower OR EQUAL item score.
+                    int perfLower = (int)Math.Round((double)scores.FindIndex(score => score == itemScore) / scores.Count() * 100);
+                    int perfHigher = (int)Math.Round((double)(scores.FindLastIndex(score => score == itemScore) + 1) / scores.Count() * 100);
+                    sb.Append("\n  > Higher than ");
+                    sb.Append(((perfLower + perfHigher) / 2) switch { // Coloring based on an average of those two values.
+                        < 40 => "<color=#FF7F7F>",
+                        > 60 => "<style=cIsHealing>",
+                        _ => "<style=cIsDamage>"
+                    });
+                    if (perfLower != perfHigher) {
+                        sb.Append(perfLower);
+                        sb.Append("-");
+                        sb.Append(perfHigher);
+                    } else {
+                        sb.Append(perfLower);
+                    }
+                    sb.Append("%</style></color> of items in the same tier");
                 } else {
-                    sb.Append(perfLower);
+                    sb.Append("\n  <style=cStack>> All items in this tier have 0 item score.</style>");
                 }
-                sb.Append("%</style></color> of items in the same tier");
             }
             return sb.ToString();
         }
@@ -133,7 +129,6 @@ namespace ItemScorePlus {
             // (use IndexOf instead of Contains for case-insensitivity).
             RoR2.UI.ItemIcon icon = __instance.GetComponentInParent<RoR2.UI.ItemIcon>();
             if (icon != null && icon.tooltipProvider.overrideBodyText.IndexOf("item score", StringComparison.OrdinalIgnoreCase) < 0) {
-                Log.LogDebug($"Failed to append item score to item with name token {__instance.titleToken} via ItemIcon.SetItemIndex hook (using TooltipProvider.bodyText hook instead).");
 
                 // ItemIcon.itemIndex is inaccessible, try to retrieve the item index using the titleToken.
                 if (ItemTokens.TryGetValue(__instance.titleToken, out ItemIndex itemIndex)) {
