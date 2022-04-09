@@ -9,7 +9,18 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
   ![Hover preview](https://i.imgur.com/w97NO38.png)
   * Configurable formatting presets with option to show more detailed info.
 
+* Item score stat dump into log output on game launch.
+
 ## Recent release history
+
+### 1.1.0
+
+* Added the item score stats log feature.
+* Replaced average item score in detailed item score info formatting with the item's tier's default value ([#4](https://github.com/MightyW0lf/ItemScorePlus/issues/4))
+* Item score now displays in descriptions of items in NoTier as well.
+* Updated the mod icon.
+* Fixed: Item descriptions with item score get overriden by other mods ([#1](https://github.com/MightyW0lf/ItemScorePlus/issues/1)) *(this time, hopefully)*
+* Fixed: Item descriptions in the final stats screen are bugged ([#6](https://github.com/MightyW0lf/ItemScorePlus/issues/6))
 
 ### 1.0.3
 
@@ -17,13 +28,9 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 
 ### 1.0.2
 
-* Fixed: [Item descriptions with item score get overriden by other mods](https://github.com/MightyW0lf/ItemScorePlus/issues/1)
+* Fixed: Item descriptions with item score get overriden by other mods ([#1](https://github.com/MightyW0lf/ItemScorePlus/issues/1))
 * Compatibility fixes for changes to the item score API in [BetterUI v2.5.5](https://thunderstore.io/package/XoXFaby/BetterUI/2.5.5/).
 * Support for item score in descriptions in logbook has been removed (for now at least).
-
-### 1.0.1
-
-* Mod is now client only.
 
 ## Links
 

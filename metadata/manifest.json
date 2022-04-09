@@ -1,11 +1,11 @@
 ﻿{
 	"name": "ItemScorePlus",
-	"version_number": "1.0.3",
+	"version_number": "1.1.0",
 	"website_url": "https://github.com/MightyW0lf/ItemScorePlus",
 	"description": "QoL features built on BetterUI's item score feature",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.1903",
-		"tristanmcpherson-R2API-4.2.1",
+		"tristanmcpherson-R2API-4.3.5",
 		"RiskofThunder-HookGenPatcher-1.2.3",
 		"XoXFaby-BetterUI-2.5.5"
 	]

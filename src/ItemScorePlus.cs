@@ -17,7 +17,7 @@ namespace ItemScorePlus {
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "MightyWolf_";
         public const string PluginName = "ItemScorePlus";
-        public const string PluginVersion = "1.0.3";
+        public const string PluginVersion = "1.1.0";
 
         /// <summary>
         /// Run at the very start when the game is initialized.
