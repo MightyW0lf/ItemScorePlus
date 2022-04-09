@@ -23,9 +23,13 @@ namespace ItemScorePlus {
         /// Run at the very start when the game is initialized.
         /// </summary>
         public void Awake() {
+            
             Log.Init(Logger); // Logging module.
             BindAll(Config); // Configuration bindings.
-            ItemDescription.Init(); // Item description module.
+            Utils.Init(); // Utilities.
+
+            ItemDescription.Init(); // ItemDescription module.
+            ItemScoreStats.Init(); // ItemScoreStats module.
         }
     }
 }

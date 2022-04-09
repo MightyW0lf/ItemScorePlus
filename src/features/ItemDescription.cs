@@ -1,11 +1,12 @@
 ﻿using RoR2;
 using BetterUI;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Text;
 using System;
 using System.Linq;
 using static ItemScorePlus.Configuration;
-using HarmonyLib;
+using static ItemScorePlus.Utils;
 
 namespace ItemScorePlus {
 
@@ -13,59 +14,22 @@ namespace ItemScorePlus {
     internal class ItemDescription {
 
         /// <summary>
-        /// Dictionary with list of item scores of all items in each tier, sorted in ascending order.
-        /// Used for building detailed item score info.
-        /// </summary>
-        private static Dictionary<ItemTier, List<float>> ScoresPerTier;
-
-        /// <summary>
-        /// Dictionary with list of all item name tokens and indeces of their items.
-        /// Used for retrieving item index from name tokens.
-        /// </summary>
-        private static Dictionary<string, ItemIndex> ItemTokens;
-
-        /// <summary>
-        /// Initialize the item description module. Should be called once on game initialization.
+        /// Initialize the ItemDescription module. Should be called once on game initialization.
         /// </summary>
         internal static void Init() {
-            Log.LogDebug($"Initializing the ItemDescription module...");
-
-            ItemCatalog.availability.CallWhenAvailable(() => BuildItemDictionaries());
-
             // Harmony patch that ensures the item score info is appended to the item's on hover description.
             new PatchClassProcessor(new Harmony(ItemScorePlus.PluginGUID), typeof(ItemDescription)).Patch();
 
-            Log.LogInfo($"ItemDescription module initialized.");
-        }
-
-        /// <returns>Dictionary with item score stats for each item tier.</returns>
-        private static void BuildItemDictionaries() {
-
-            ScoresPerTier = new();
-            ItemTokens = new();
-
-            foreach (ItemDef item in ItemCatalog.allItemDefs) {
-                if (ScoresPerTier.TryGetValue(item.tier, out List<float> tierScores)) {
-                    tierScores.Add(ItemCounters.GetItemScore(item));
-                } else {
-                    ScoresPerTier[item.tier] = new List<float> { ItemCounters.GetItemScore(item) };
-                }
-                ItemTokens[item.nameToken] = item.itemIndex;
-            }
-
-            foreach (List<float> tierScores in ScoresPerTier.Values) {
-                tierScores.Sort();
-            }
+            Log.LogDebug($"ItemDescription module initialized.");
         }
 
         /// <returns>A string with information about the given item's item score with formatting based
         /// on <see cref="Appearance"/>Appearance.</returns>
         private static string GetItemScoreInfo(ItemDef item) {
-            float itemScore = ItemCounters.GetItemScore(item);
             return Appearance.Value switch {
-                AppearanceEnum.Compact => $"<style=cStack> +{Math.Round(itemScore, 2)} item score.</style>",
-                AppearanceEnum.Detailed => GetDetailedItemScoreInfo(itemScore, item.tier),
-                _ => $"\n\nItem score: <style=cIsUtility>{Math.Round(itemScore, 2)}</style>" // AppearanceEnum.Spacious or otherwise
+                AppearanceEnum.Compact => $"<style=cStack> +{Math.Round(ItemCounters.GetItemScore(item), 2)} item score.</style>",
+                AppearanceEnum.Detailed => GetDetailedItemScoreInfo(item),
+                _ => $"\n\nItem score: <style=cIsUtility>{Math.Round(ItemCounters.GetItemScore(item), 2)}</style>" // AppearanceEnum.Spacious or otherwise
             };
         }
 
@@ -75,24 +39,30 @@ namespace ItemScorePlus {
         /// <param name="itemScore"></param> Item's score.
         /// <param name="itemTier"></param> Item's tier.
         /// <returns>String ready to be appended to the item's description.</returns>
-        private static string GetDetailedItemScoreInfo(float itemScore, ItemTier itemTier) {
+        private static string GetDetailedItemScoreInfo(ItemDef item) {
+
+            float itemScore = ItemCounters.GetItemScore(item);
+            float tierScore = ItemCounters.GetTierScore(item.tier);
+
             StringBuilder sb = new();
             sb.Append("\n\nItem score: <style=cIsUtility>");
             sb.Append(Math.Round(itemScore, 2));
             sb.Append("</style>");
 
-            if (ScoresPerTier.TryGetValue(itemTier, out List<float> scores)) {
+            if (ScoresPerTier.TryGetValue(item.tier, out List<float> scores)) {
                 if (scores.Sum() != 0) {
 
-                    int relative = (int)Math.Round(itemScore / scores.Average() * 100);
+                    int relative = (int)Math.Round(itemScore / tierScore * 100);
                     sb.Append("\n  > ");
-                    sb.Append(relative switch { // Coloring based on how "good" the item score is.
+                    sb.Append(relative switch { // Coloring based on how high the relative item score is.
                         < 75 => "<color=#FF7F7F>",
                         > 125 => "<style=cIsHealing>",
                         _ => "<style=cIsDamage>"
                     });
                     sb.Append(relative);
-                    sb.Append("%</style></color> of this item's tier average");
+                    sb.Append("%</style></color> of this item's tier default <style=cStack>(");
+                    sb.Append(Math.Round(tierScore, 2));
+                    sb.Append(")</style>");
 
                     // Lower is % of items with lower item score, higher is % of items with lower OR EQUAL item score.
                     int perfLower = (int)Math.Round((double)scores.FindIndex(score => score == itemScore) / scores.Count() * 100);
