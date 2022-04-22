@@ -1,6 +1,6 @@
 ﻿{
 	"name": "ItemScorePlus",
-	"version_number": "1.1.0",
+	"version_number": "1.1.1",
 	"website_url": "https://github.com/MightyW0lf/ItemScorePlus",
 	"description": "QoL features built on BetterUI's item score feature",
 	"dependencies": [

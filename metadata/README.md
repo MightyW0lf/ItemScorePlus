@@ -13,6 +13,10 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 
 ## Recent release history
 
+### 1.1.1
+
+* Fixed: Compatibility with game hotfix 1.2.3
+
 ### 1.1.0
 
 * Added the item score stats log feature.
@@ -25,12 +29,6 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 ### 1.0.3
 
 * README and Thunderstore tag fixes.
-
-### 1.0.2
-
-* Fixed: Item descriptions with item score get overriden by other mods ([#1](https://github.com/MightyW0lf/ItemScorePlus/issues/1))
-* Compatibility fixes for changes to the item score API in [BetterUI v2.5.5](https://thunderstore.io/package/XoXFaby/BetterUI/2.5.5/).
-* Support for item score in descriptions in logbook has been removed (for now at least).
 
 ## Links
 
