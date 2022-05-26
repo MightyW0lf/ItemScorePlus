@@ -7,11 +7,15 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 * Item score in item descriptions
 
   ![Hover preview](https://i.imgur.com/w97NO38.png)
-  * Configurable formatting presets with option to show more detailed info.
+  * Configurable formatting presets with option to show more detailed info
 
-* Item score stat dump into log output on game launch.
+* Item score stat dump into log output on game launch
 
 ## Recent release history
+
+### 1.1.2
+
+* Fixed: Division by zero in detailed item score description.
 
 ### 1.1.1
 
@@ -26,13 +30,10 @@ Adds features based on the [BetterUI](https://thunderstore.io/package/XoXFaby/Be
 * Fixed: Item descriptions with item score get overriden by other mods ([#1](https://github.com/MightyW0lf/ItemScorePlus/issues/1)) *(this time, hopefully)*
 * Fixed: Item descriptions in the final stats screen are bugged ([#6](https://github.com/MightyW0lf/ItemScorePlus/issues/6))
 
-### 1.0.3
-
-* README and Thunderstore tag fixes.
-
 ## Links
 
 * [RoR2 mod installation guide](https://github.com/risk-of-thunder/R2Wiki/wiki/Beginner's-Guide-for-Modding-Risk-of-Rain-2#Mod-Manager)
+  * Mod has been tested for game version 1.2.4.1
 * [Complete release history](https://github.com/MightyW0lf/ItemScorePlus/releases)
 * [Possibly upcoming features](https://github.com/MightyW0lf/ItemScorePlus/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
 * [Known issues](https://github.com/MightyW0lf/ItemScorePlus/issues?q=is%3Aissue+is%3Aopen+label%3Abug)

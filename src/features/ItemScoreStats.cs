@@ -34,7 +34,7 @@ namespace ItemScorePlus {
                 sb.Append($"  > Item count: {scores.Value.Count}\n");
                 sb.Append($"  > Default item score: {Math.Round(ItemCounters.GetTierScore(scores.Key), 2)}\n");
                 sb.Append($"  > Average item score: {Math.Round(scores.Value.Average(), 2)}\n");
-                sb.Append($"  > Lowest - highest item score: {Math.Round(scores.Value.Min(), 2)} - {Math.Round(scores.Value.Max(), 2)}");
+                sb.Append($"  > MIN - MAX item score: {Math.Round(scores.Value.Min(), 2)} - {Math.Round(scores.Value.Max(), 2)}");
                 Log.LogInfo(sb.ToString());
             }
         }

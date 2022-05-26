@@ -36,8 +36,6 @@ namespace ItemScorePlus {
         /// <summary>
         /// Builds a string with detailed information about the item's item score.
         /// </summary>
-        /// <param name="itemScore"></param> Item's score.
-        /// <param name="itemTier"></param> Item's tier.
         /// <returns>String ready to be appended to the item's description.</returns>
         private static string GetDetailedItemScoreInfo(ItemDef item) {
 
@@ -52,17 +50,23 @@ namespace ItemScorePlus {
             if (ScoresPerTier.TryGetValue(item.tier, out List<float> scores)) {
                 if (scores.Sum() != 0) {
 
-                    int relative = (int)Math.Round(itemScore / tierScore * 100);
-                    sb.Append("\n  > ");
-                    sb.Append(relative switch { // Coloring based on how high the relative item score is.
-                        < 75 => "<color=#FF7F7F>",
-                        > 125 => "<style=cIsHealing>",
-                        _ => "<style=cIsDamage>"
-                    });
-                    sb.Append(relative);
-                    sb.Append("%</style></color> of this item's tier default <style=cStack>(");
-                    sb.Append(Math.Round(tierScore, 2));
-                    sb.Append(")</style>");
+                    if (tierScore != 0) {
+                        int relative = (int)Math.Round(itemScore / tierScore * 100);
+                        sb.Append("\n  > ");
+                        sb.Append(relative switch
+                        {
+                            // Coloring based on how high the relative item score is.
+                            < 75 => "<color=#FF7F7F>",
+                            > 125 => "<style=cIsHealing>",
+                            _ => "<style=cIsDamage>"
+                        });
+                        sb.Append(relative);
+                        sb.Append("%</style></color> of this item's tier default <style=cStack>(");
+                        sb.Append(Math.Round(tierScore, 2));
+                        sb.Append(")</style>");
+                    } else { // TODO: Handle tierScore == 0 (separate message)
+                        sb.Append("\n  > This item's tier default is 0.");
+                    }
 
                     // Lower is % of items with lower item score, higher is % of items with lower OR EQUAL item score.
                     int perfLower = (int)Math.Round((double)scores.FindIndex(score => score == itemScore) / scores.Count() * 100);
