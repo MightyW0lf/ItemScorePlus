@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Text;
 using System;
 using System.Linq;
+using R2API.Utils;
 using static ItemScorePlus.Configuration;
 using static ItemScorePlus.Utils;
 
-namespace ItemScorePlus {
+namespace ItemScorePlus.features {
 
     [HarmonyPatch]
     internal class ItemDescription {
@@ -64,7 +65,7 @@ namespace ItemScorePlus {
                         sb.Append("%</style></color> of this item's tier default <style=cStack>(");
                         sb.Append(Math.Round(tierScore, 2));
                         sb.Append(")</style>");
-                    } else { // TODO: Handle tierScore == 0 (separate message)
+                    } else {
                         sb.Append("\n  > This item's tier default is 0.");
                     }
 
@@ -93,24 +94,18 @@ namespace ItemScorePlus {
         }
 
         /// <summary>
-        /// Checks if item tooltip contains item score info and adds it if it doesn't. Functions as a fallback when
-        /// item score added via a hook is overriden by another mod.
+        /// Appends item score info to the item tooltip description via a Harmony patch.
         /// </summary>
         [HarmonyPostfix, HarmonyPatch(typeof(RoR2.UI.TooltipProvider), "get_bodyText")]
-        public static void PatchMissingScore(RoR2.UI.TooltipProvider __instance, ref string __result) {
+        public static void AppendScoreInfo(RoR2.UI.TooltipProvider __instance, ref string __result) {
 
             // Check if this is an ItemIcon's tooltip and if it doesn't have an item score in description.
             // (use IndexOf instead of Contains for case-insensitivity).
             RoR2.UI.ItemIcon icon = __instance.GetComponentInParent<RoR2.UI.ItemIcon>();
-            if (icon != null && icon.tooltipProvider.overrideBodyText.IndexOf("item score", StringComparison.OrdinalIgnoreCase) < 0) {
-
-                // ItemIcon.itemIndex is inaccessible, try to retrieve the item index using the titleToken.
-                if (ItemTokens.TryGetValue(__instance.titleToken, out ItemIndex itemIndex)) {
-                    __result += GetItemScoreInfo(ItemCatalog.GetItemDef(itemIndex));
-                } else {
-                    Log.LogWarning($"Failed to get item index for item with name token {__instance.titleToken}.");
-                }
-            }
+            if (icon == null || icon.tooltipProvider.overrideBodyText.IndexOf("item score", StringComparison.OrdinalIgnoreCase) >= 0) return;
+            
+            // ItemIcon.itemIndex is private.
+            __result += GetItemScoreInfo(ItemCatalog.GetItemDef(icon.GetFieldValue<ItemIndex>("itemIndex")));
         }
     }
 }

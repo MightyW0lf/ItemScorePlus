@@ -13,27 +13,18 @@ namespace ItemScorePlus {
         internal static Dictionary<ItemTier, List<float>> ScoresPerTier;
 
         /// <summary>
-        /// Dictionary with list of all item name tokens and indeces of their items.
-        /// Used for retrieving item index from name tokens.
-        /// </summary>
-        internal static Dictionary<string, ItemIndex> ItemTokens;
-
-        /// <summary>
         /// Initialize the utils module. Should be called once on game initialization.
         /// </summary>
         internal static void Init() {
-            ItemCatalog.availability.CallWhenAvailable(() => {
-                BuildItemDictionaries();
-            });
+            ItemCatalog.availability.CallWhenAvailable(BuildItemDictionaries);
 
             Log.LogDebug($"Utilities initialized.");
         }
 
         /// <returns>Dictionary with item score stats for each item tier.</returns>
-        internal static void BuildItemDictionaries() {
+        private static void BuildItemDictionaries() {
 
-            ScoresPerTier = new();
-            ItemTokens = new();
+            ScoresPerTier = new Dictionary<ItemTier, List<float>>();
 
             foreach (ItemDef item in ItemCatalog.allItemDefs) {
                 if (ScoresPerTier.TryGetValue(item.tier, out List<float> tierScores)) {
@@ -41,7 +32,6 @@ namespace ItemScorePlus {
                 } else {
                     ScoresPerTier[item.tier] = new List<float> { ItemCounters.GetItemScore(item) };
                 }
-                ItemTokens[item.nameToken] = item.itemIndex;
             }
 
             foreach (List<float> tierScores in ScoresPerTier.Values) {

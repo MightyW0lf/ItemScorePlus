@@ -7,7 +7,7 @@ using System.Text;
 using static ItemScorePlus.Configuration;
 using static ItemScorePlus.Utils;
 
-namespace ItemScorePlus {
+namespace ItemScorePlus.features {
     internal class ItemScoreStats {
 
         /// <summary>
@@ -15,9 +15,7 @@ namespace ItemScorePlus {
         /// </summary>
         internal static void Init() {
             if (ItemScoreStatsLogDump.Value) {
-                ItemCatalog.availability.CallWhenAvailable(() => {
-                    LogItemScoreStats();
-                });
+                ItemCatalog.availability.CallWhenAvailable(LogItemScoreStats);
             }
 
             Log.LogDebug($"ItemScoreStats module initialized.");

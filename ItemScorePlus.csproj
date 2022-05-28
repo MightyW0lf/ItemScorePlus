@@ -10,15 +10,15 @@
 
 	<ItemGroup>
 		<PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
-		<PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.3.1-r.0" />
+		<PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.4-r.0" />
 		<PackageReference Include="BepInEx.Core" Version="5.4.19" />
-		<PackageReference Include="R2API" Version="4.3.5" />
-		<PackageReference Include="BetterUI" Version="2.5.5" />
+		<PackageReference Include="R2API" Version="4.3.21" />
+		<PackageReference Include="BetterUI" Version="2.6.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="MMHOOK_Assembly-CSharp">
-	    <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
+	  <Reference Include="MMHOOK_RoR2">
+	    <HintPath>libs\MMHOOK_RoR2.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
